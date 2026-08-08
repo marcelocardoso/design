@@ -1,0 +1,13 @@
+{
+  "name": "elegant-society-design",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Geradores e ativos de design da Elegant Society",
+  "scripts": {
+    "assets": "python3 scripts/extract_source.py && python3 scripts/prepare_assets.py",
+    "build": "node build.js"
+  },
+  "dependencies": {
+    "pptxgenjs": "^4.0.1"
+  }
+}
