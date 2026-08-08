@@ -1,8 +1,9 @@
 # design
 
-Materiais de design da **Elegant Society**. Hoje contém a apresentação comercial
-de coordenação de festas de 15 anos, gerada por código a partir de um único
-script — o deck é reconstruível e versionável, não um arquivo binário editado à mão.
+Materiais de design da **Elegant Society**, gerados por código — reconstruíveis e
+versionáveis, não arquivos binários editados à mão. Hoje são dois conjuntos: a
+apresentação comercial de coordenação de festas de 15 anos e os contratos
+jurídicos em português.
 
 ## O deck
 
@@ -53,10 +54,46 @@ o PDF foi comprimido. Por isso nenhum slide usa foto sangrada em tela cheia — 
 há pixels para isso. Com os arquivos originais das fotografias, o deck ganharia
 bastante impacto com enquadramentos maiores.
 
+## Os contratos
+
+Três documentos jurídicos da empresa, traduzidos do inglês para o português e
+rediagramados sobre a mesma identidade do deck:
+
+`contratos/out/Elegant Society - Termos e Condicoes Gerais.docx` — 17 páginas, 51 seções
+`contratos/out/Elegant Society - Contrato de Prestacao de Servicos Autonomos.docx` — 11 páginas, 32 seções + Anexo A
+`contratos/out/Elegant Society - Contrato de Cessao de Privacidade.docx` — 11 páginas, 19 seções + Anexos A e B
+
+Cada um acompanha um `.pdf` para envio. Os originais em inglês eram documentos
+de texto corrido, sem hierarquia visual além dos títulos em maiúsculas.
+
+O sistema de diagramação vive em `contratos/brand.js` e reaproveita a paleta e a
+tipografia do deck — vinho `#421325`, champanhe `#C0A17A`, marfim `#F7F2EC`,
+Cambria nos títulos e Calibri no corpo. O que ele define:
+
+- capa sem cabeçalho, com filete vinho, wordmark em versalete espaçado, título
+  serifado e tabela de dados em faixas marfim alternadas
+- títulos de seção com número em champanhe e filete inferior; anexos e
+  assinaturas em faixa centralizada entre dois filetes
+- caixas de aviso com fundo marfim e barra champanhe à esquerda
+- blocos de assinatura em faixa vinho com linhas douradas, montados como célula
+  única para não se separarem do cabeçalho na quebra de página
+- cabeçalho e rodapé correntes com endereço e paginação
+
+Ajustar a marca nos três documentos é mudar as constantes no topo de `brand.js`.
+
+### Ponto em aberto
+
+**Idioma de prevalência.** Os contratos são regidos pela lei de Massachusetts,
+com foro em Middlesex County. A versão em português não traz cláusula dizendo
+qual texto prevalece em caso de divergência — o usual é manter o inglês como
+versão controladora e o português como cortesia. A cláusula não foi acrescentada
+porque altera o conteúdo jurídico, e não a diagramação.
+
 ## Reconstruindo
 
 ```bash
 npm install                             # pptxgenjs
+node contratos/build.js                 # gera os três .docx
 python3 -m pip install pymupdf Pillow   # extração e recorte
 
 python3 scripts/extract_source.py       # logo + fotos reais do PDF original
@@ -64,10 +101,12 @@ python3 scripts/prepare_assets.py       # recortes nos enquadramentos do deck
 node build.js                           # gera o .pptx
 ```
 
-Para exportar o PDF é preciso o LibreOffice Impress:
+Para exportar os PDFs é preciso o LibreOffice (`libreoffice-impress` para o deck,
+`libreoffice-writer` para os contratos):
 
 ```bash
 soffice --headless --convert-to pdf --outdir out "out/Elegant Society - 15 Anos.pptx"
+soffice --headless --convert-to pdf --outdir contratos/out contratos/out/*.docx
 ```
 
 ## Estrutura
@@ -79,6 +118,10 @@ scripts/prepare_assets.py   recorta as fotos nos enquadramentos usados
 assets/                     logo e recortes prontos (versionados)
 source/                     PDF original e fotografias extraídas
 out/                        deck final em .pptx e .pdf
+contratos/brand.js          sistema de diagramação dos documentos jurídicos
+contratos/0*.js             um script por contrato — só conteúdo, sem estilo
+contratos/build.js          gera os três de uma vez
+contratos/out/              contratos finais em .docx e .pdf
 ```
 
 O sistema visual vive no topo de `build.js`: cores, fontes, margens e os
